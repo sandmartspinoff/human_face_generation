@@ -197,13 +197,13 @@ python gen_images.py --outdir=thousand/gan3-2419-trunc1 --trunc=1 --seeds=1-1000
 git clone https://github.com/sandmartspinoff/human_face_generation.git
 ```
 
-1. move into StyleGAN3 directory
+2. move into StyleGAN3 directory
 
 ```bash
 cd stylegan3
 ```
 
-1. Build docker image from the Dockerfile and run container 
+3. Build docker image from the Dockerfile and run container 
 
 ```bash
 # build stylegan3 docker image
@@ -213,7 +213,7 @@ docker run --shm-size=4g --gpus all -it --rm -v "$(pwd)":/scratch \
 --workdir=/scratch -e HOME=/scratch stylegan3:latest bash # opens an interactive bash shell inside the container 
 ```
 
-1. Download the checkpoint: https://drive.google.com/file/d/10Tmk7t9_HWmIn_AJU3EF4M-9RLvK8pwe/view?usp=sharing
+4. Download the checkpoint: https://drive.google.com/file/d/10Tmk7t9_HWmIn_AJU3EF4M-9RLvK8pwe/view?usp=sharing
 
 ```bash
 # if there's no gdown
@@ -222,7 +222,7 @@ pip install gdown
 gdown --fuzzy "https://drive.google.com/file/d/10Tmk7t9_HWmIn_AJU3EF4M-9RLvK8pwe/view?usp=sharing"
 ```
 
-1. Generate 1000 samples
+5. Generate 1000 samples
 
 ```bash
 # outdir is where samples are saved (e.g. /scratch/thousand/gan3-2419-trunc1)
