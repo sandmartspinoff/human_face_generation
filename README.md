@@ -200,7 +200,7 @@ git clone https://github.com/sandmartspinoff/human_face_generation.git
 2. move into StyleGAN3 directory
 
 ```bash
-cd stylegan3
+cd human_face_generation/stylegan3
 ```
 
 3. Build docker image from the Dockerfile and run container 
