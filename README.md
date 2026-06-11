@@ -1,6 +1,8 @@
 # Human face generation
 
-## Dataset: CelebV-HQ
+<details>
+<summary><strong>Dataset: CelebV-HQ</strong></summary>
+
 
 github link: https://github.com/CelebV-HQ/CelebV-HQ
 
@@ -21,13 +23,20 @@ Sampled frames from each video at a fixed interval and applied MediaPipe Face De
 
 Note. some faces are not detected through MediaPipe Face Detection (Followings are the example - total 686 videos among 35666 videos)
 
-![image.png](image.png)
+<table>
+<tr>
+<td><img src="image.png" width="250"></td>
+<td><img src="image%201.png" width="250"></td>
+<td><img src="image%202.png" width="250"></td>
+</tr>
+</table>
 
-![image.png](image%201.png)
 
-![image.png](image%202.png)
+</details>
 
-## StyleGAN architecture
+<details>
+<summary><strong>StyleGAN architecture</strong></summary>
+
 
 ![image.png](image%203.png)
 
@@ -41,7 +50,12 @@ Note. some faces are not detected through MediaPipe Face Detection (Followings a
     
 - While the original GAN generator synthesizes images directly from a latent vector $z$, StyleGAN introduces a mapping network $z \rightarrow w$ and injects style information into every layer through Adaptive Instance Normalization (AdaIN). AdaIN first normalizes the feature statistics of a convolutional layer and then modulates them using layer-specific affine transformations of $w$, localizing the effect of each style to a particular layer. Combined with the generator's coarse-to-fine architecture, this encourages early layers to control high-level attributes such as pose and face shape, while later layers specialize in fine details and textures. StyleGAN further injects independent noise into each layer, enabling stochastic variation such as skin pores, freckles, and individual hair placement, relieving the latent code from having to encode both global structure and fine local randomness simultaneously.
 
-## StyleGAN2 architecture
+
+</details>
+
+<details>
+<summary><strong>StyleGAN2 architecture</strong></summary>
+
 
 ![image.png](image%204.png)
 
@@ -49,7 +63,12 @@ Note. some faces are not detected through MediaPipe Face Detection (Followings a
 - StyleGAN2 removed progressive growing and instead trained the full-resolution network from the beginning. To preserve coarse-to-fine image synthesis, the generator uses skip connections that convert features at each resolution to RGB and sum them into the final image, while the discriminator adopts a residual architecture. This design retains the hierarchical generation process without requiring layers to be added during training. In progressive growing, the generator and discriminator repeatedly change their structure as new resolution blocks are introduced, causing shifts in the learned feature representations and encouraging certain visual features to become tied to specific resolutions. These effects can manifest as phase artifacts, distorted spatial relationships, and other characteristic image artifacts. By keeping the network architecture fixed throughout training, StyleGAN2 achieves more stable optimization, smoother latent-space behavior (lower PPL), and improved image quality (lower FID).
 - projection of images to latent space:
 
-## StyleGAN2-ada (adaptive discriminator augmentation)
+
+</details>
+
+<details>
+<summary><strong>StyleGAN2-ada (adaptive discriminator augmentation)</strong></summary>
+
 
 github link: https://github.com/nvlabs/stylegan2-ada-pytorch
 
@@ -91,7 +110,12 @@ python generate.py --outdir=thousand --trunc=1 --seeds=1-1000 \
     --network=/scratch/training-runs/00000-styleganv2_celebv_hq-auto8-kimg10000-ada-target0.6-blit-resumeffhq256/network-snapshot-009999.pkl
 ```
 
-## StyleGAN3
+
+</details>
+
+<details>
+<summary><strong>StyleGAN3</strong></summary>
+
 
 ### Training the model (additionally train from the checkpoint)
 
@@ -110,7 +134,12 @@ python gen_images.py --outdir=thousand --trunc=1 --seeds=1-1000 \
     --network=/scratch/training-runs/(checkpoint)
 ```
 
-## Experiment
+
+</details>
+
+<details>
+<summary><strong>Experiment</strong></summary>
+
 
 1. StyleGAN2-ada
 
@@ -155,7 +184,12 @@ python gen_images.py --outdir=thousand/gan3-2419-trunc1 --trunc=1 --seeds=1-1000
 --network=/scratch/training-runs/00005-stylegan3-t-celebvhq-available-gpus8-batch64-gamma2.2/network-snapshot-002419.pkl
 ```
 
-## Reproducing the best result (this is same as StyleGAN3 environment setting)
+
+</details>
+
+<details>
+<summary><strong>Reproducing the best result (this is same as StyleGAN3 environment setting)</strong></summary>
+
 
 1. Clone the experiment repository
 
@@ -163,27 +197,37 @@ python gen_images.py --outdir=thousand/gan3-2419-trunc1 --trunc=1 --seeds=1-1000
 git clone https://github.com/sandmartspinoff/human_face_generation.git
 ```
 
-1. move into StyleGAN3 directory and paste the chekpoint [https://drive.google.com/drive/folders/12xMwlIEin3mc9do6aB8LNB1KeBBuCOTn?usp=sharing](https://drive.google.com/drive/folders/12xMwlIEin3mc9do6aB8LNB1KeBBuCOTn?usp=sharing) under this stylegan3 directory
+1. move into StyleGAN3 directory
 
 ```bash
-cd human_face_generation/stylegan3
-# paste checkpoint
-cp (checkpoint path) .
+cd stylegan3
 ```
 
-1. Build docker image from the Dockerfile and run container using docker_run.sh
+1. Build docker image from the Dockerfile and run container 
 
 ```bash
 # build stylegan3 docker image
 docker build -t stylegan3 .
 # run docker container (current directory is set to HOME)
-sh docker_run.sh bash # opens an interactive bash shell inside the container 
+docker run --shm-size=4g --gpus all -it --rm -v "$(pwd)":/scratch \
+--workdir=/scratch -e HOME=/scratch stylegan3:latest bash # opens an interactive bash shell inside the container 
+```
+
+1. Download the checkpoint: https://drive.google.com/file/d/10Tmk7t9_HWmIn_AJU3EF4M-9RLvK8pwe/view?usp=sharing
+
+```bash
+# if there's no gdown
+pip install gdown
+# download checkpoint
+gdown --fuzzy "https://drive.google.com/file/d/10Tmk7t9_HWmIn_AJU3EF4M-9RLvK8pwe/view?usp=sharing"
 ```
 
 1. Generate 1000 samples
 
 ```bash
-# outdir is where samples are saved
+# outdir is where samples are saved (e.g. /scratch/thousand/gan3-2419-trunc1)
 python gen_images.py --outdir=thousand/gan3-2419-trunc1 --trunc=1 --seeds=1-1000  \
 --network=/scratch/network-snapshot-002419.pkl
 ```
+
+</details>
