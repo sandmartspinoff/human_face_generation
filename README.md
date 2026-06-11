@@ -166,7 +166,7 @@ git clone https://github.com/sandmartspinoff/human_face_generation.git
 1. move into StyleGAN3 directory and paste the chekpoint [https://drive.google.com/drive/folders/12xMwlIEin3mc9do6aB8LNB1KeBBuCOTn?usp=sharing](https://drive.google.com/drive/folders/12xMwlIEin3mc9do6aB8LNB1KeBBuCOTn?usp=sharing) under this stylegan3 directory
 
 ```bash
-cd stylegan3
+cd human_face_generation/stylegan3
 # paste checkpoint
 cp (checkpoint path) .
 ```
